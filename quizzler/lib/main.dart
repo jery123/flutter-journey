@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'question.dart';
+import 'package:quizzler/quiz_brain.dart';
+
+QuizBrain quizBank = QuizBrain();
 
 void main() => runApp(Quizzler());
 
@@ -49,6 +51,18 @@ class _QuizPageState extends State<QuizPage> {
     // )
   ];
 
+  void checkAnswer(bool userPickedAnswer) {
+    bool correctAnswer = quizBank.getCorrectAnswer();
+
+    setState(() {
+      if (userPickedAnswer == correctAnswer) {
+        scoreKeeper.add(Icon(Icons.check, color: Colors.green));
+      } else {
+        scoreKeeper.add(Icon(Icons.close, color: Colors.red));
+      }
+      quizBank.nextQuestion();
+    });
+  }
   // List<String> questions = [
   //   'You can lead a cow down stairs but not up stairs.',
   //   'Approximately one quarter of human bones are in the feet.',
@@ -61,17 +75,16 @@ class _QuizPageState extends State<QuizPage> {
   //   true
   // ];
 
-  Question q1 = Question('You can lead a cow down stairs but not up stairs.', false);
-  Question q2 = Question('Approximately one quarter of human bones are in the feet.', true);
-  Question q3 = Question('A slug\'s blood is green.', true);
-
-  late List<Question> questionBank = [
-    q1,
-    q2,
-    q3
-  ];
+  // Question q1 = Question('You can lead a cow down stairs but not up stairs.', false);
+  // Question q2 = Question('Approximately one quarter of human bones are in the feet.', true);
+  // Question q3 = Question('A slug\'s blood is green.', true);
+  //
+  // late List<Question> questionBank = [
+  //   q1,
+  //   q2,
+  //   q3
+  // ];
   int questionNumber = 0;
-
 
   @override
   Widget build(BuildContext context) {
@@ -85,12 +98,9 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                questionBank[questionNumber].questionText,
+                quizBank.getQuestionText(),
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 25.0,
-                  color: Colors.white,
-                ),
+                style: TextStyle(fontSize: 25.0, color: Colors.white),
               ),
             ),
           ),
@@ -104,34 +114,25 @@ class _QuizPageState extends State<QuizPage> {
                   borderRadius: BorderRadius.zero, // Removes border radius
                 ),
                 backgroundColor: Colors.green,
-                textStyle: TextStyle(
-                  color: Colors.white
-                )
+                textStyle: TextStyle(color: Colors.white),
               ),
               child: Text(
                 'True',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                ),
+                style: TextStyle(color: Colors.white, fontSize: 20.0),
               ),
               onPressed: () {
-                bool correctAnswer = questionBank[questionNumber].questionAnswer;
+                checkAnswer(true);
 
-                if(correctAnswer == true){
-                  print("User got it right");
-                }else{
-                  print("User got it wrong");
-                }
-                setState(() {
-                  questionNumber++;
-                  // scoreKeeper.add(
-                  //     Icon(
-                  //         Icons.check,
-                  //         color: Colors.green
-                  //     )
-                  // );
-                });
+                // setState(() {
+                //   quizBank.nextQuestion();
+                //   // questionNumber++;
+                //   // scoreKeeper.add(
+                //   //     Icon(
+                //   //         Icons.check,
+                //   //         color: Colors.green
+                //   //     )
+                //   // );
+                // });
               },
             ),
           ),
@@ -145,42 +146,37 @@ class _QuizPageState extends State<QuizPage> {
                   borderRadius: BorderRadius.zero, // Removes border radius
                 ),
                 backgroundColor: Colors.red,
-                textStyle: TextStyle(
-                    color: Colors.white
-                )
+                textStyle: TextStyle(color: Colors.white),
               ),
               child: Text(
                 'False',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.white,
-                ),
+                style: TextStyle(fontSize: 20.0, color: Colors.white),
               ),
               onPressed: () {
-                bool correctAnswer = questionBank[questionNumber].questionAnswer;
+                checkAnswer(false);
+                // bool correctAnswer = quizBank.getCorrectAnswer();
+                //
+                // if(correctAnswer == true){
+                //   print("User got it right");
+                // }else{
+                //   print("User got it wrong");
+                // }
 
-                if(correctAnswer == true){
-                  print("User got it right");
-                }else{
-                  print("User got it wrong");
-                }
-                setState(() {
-                  questionNumber++;
-                  // scoreKeeper.add(
-                  //     Icon(
-                  //         Icons.check,
-                  //         color: Colors.red
-                  //     )
-                  // );
-                });
+                // setState(() {
+                //   quizBank.nextQuestion();
+                //   // questionNumber++;
+                //   // scoreKeeper.add(
+                //   //     Icon(
+                //   //         Icons.check,
+                //   //         color: Colors.red
+                //   //     )
+                //   // );
+                // });
               },
             ),
           ),
         ),
-         Row(
-           children:
-            scoreKeeper,
-         )
+        Row(children: scoreKeeper),
       ],
     );
   }
